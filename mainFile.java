@@ -1,6 +1,9 @@
 //package Clinic;
 import java.util.Scanner;
 import java.util.Date;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 class patient {
 
