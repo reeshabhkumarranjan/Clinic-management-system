@@ -1,48 +1,12 @@
-//package Clinic;
 import java.util.Scanner;
-import java.util.Date;
-import java.io.Serializable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-class patient {
-
-	static double fee;
-	static int callNumberTracker;
-
-	int callNumber;
-	String name;
-	String problem;
-	Date date;
-	String contactNumber;
-
-	public patient(String name,String problem,String contactNumber) {
-		
-		//this.callNumber=++callNumberTracker;
-		this.name=name;
-		this.problem=problem;
-		this.date= new Date();
-		this.contactNumber=contactNumber;
-	}
-}
-
-class medicine {
-
-	static double tax;
-	static int packetIdTracker;
-
-	int packetID;
-	String name;
-	String type;
-	int stockQty;
-
-	public medicine(String name,String type,int stockQty) {
-		this.name=name;
-		this.type=type;
-		//this.packetID=packetID;
-		this.stockQty=stockQty;
-	}
-}
 
 class mainFile {
 
@@ -113,6 +77,28 @@ class mainFile {
 			String contactNumber=read.nextLine();
 
 			patient p=new patient(name,problem,contactNumber);
+
+			try {
+				FileOutputStream f=new FileOutputStream(new File("patients.txt"));
+				ObjectOutputStream o=new ObjectOutputStream(f);
+
+				o.writeObject(p);
+
+				o.close();
+				f.close();
+			}
+			catch (FileNotFoundException e) {
+				System.out.println("File not found");
+			} 
+
+			catch (IOException e) {
+				System.out.println("Error initializing stream");
+			} 
+
+			// catch (ClassNotFoundException e) {
+			// 	// TODO Auto-generated catch block
+			// 	e.printStackTrace();
+			// }
 		}
 
 		else if (choice==2) {
@@ -141,6 +127,70 @@ class mainFile {
 
 	public static boolean displayRecords() {
 		System.out.print("\033\143");
+
+		System.out.println("Choose from the following options:");
+		System.out.println("1. View the patients' list.");
+		System.out.println("2. View the medicine list.");
+
+		Scanner read = new Scanner(System.in);
+		
+		String rawChoice=read.nextLine();
+		//int choice=4;
+
+		boolean validEntry=choiceValidator(rawChoice,1,2);
+
+		while (!validEntry) {
+
+			validEntry=choiceValidator(rawChoice,1,2);
+
+			if (validEntry) {
+				break;
+			}
+
+			System.out.println("Invalid input. Try again.");
+			rawChoice=read.nextLine();
+		}
+
+		// boolean validEntry=choiceValidator(rawChoice,1,2);
+
+		// while (!validEntry) {
+		// 	rawChoice=read.nextLine();
+		// 	validEntry=choiceValidator(rawChoice,1,2);
+		// }
+
+		int choice=Integer.parseInt(rawChoice);
+
+		if (choice==1) {
+
+			try {
+				FileInputStream fi=new FileInputStream(new File("patients.txt"));
+				ObjectInputStream oi=new ObjectInputStream(fi);
+
+				patient p=(patient) oi.readObject();
+
+				System.out.println(p.toString());
+
+				oi.close();
+				fi.close();
+
+			}
+		catch (FileNotFoundException e) {
+			System.out.println("File not found");
+		} 
+		catch (IOException e) {
+			System.out.println("Error initializing stream");
+		}
+		catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+		else if (choice==2) {
+
+		}
+
+		read.close();
 		return true;
 	}
 
@@ -219,7 +269,7 @@ class mainFile {
 			break;
 
 			case 3: //display records
-			;
+			boolean ans2=displayRecords();
 			break;
 
 			default: //somehow choice got affected
