@@ -1,2 +1,2 @@
 # Clinic-management-system
-A project to test my knowledge in Java.
+A project to test my lack of knowledge in Java.
